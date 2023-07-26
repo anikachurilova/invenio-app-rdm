@@ -10,7 +10,7 @@ import { Icon, Button, Modal, Tab } from "semantic-ui-react";
 import { i18next } from "@translations/invenio_app_rdm/i18next";
 import PropTypes from "prop-types";
 import { LinksTab } from "./AccessLinks/LinksTab";
-// import { GrantsTab } from "./GrantsTab";
+import { AccessRequestsTab } from "./AccessRequests/AccessRequestsTab";
 
 export const ShareModal = ({ record, open, handleClose, accessLinksSearchConfig }) => {
   const panes = [
@@ -19,6 +19,14 @@ export const ShareModal = ({ record, open, handleClose, accessLinksSearchConfig 
       pane: (
         <Tab.Pane className="borderless" attached="top" key="accessLinks">
           <LinksTab record={record} accessLinksSearchConfig={accessLinksSearchConfig} />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: { icon: "cog", content: "Access requests" },
+      pane: (
+        <Tab.Pane className="borderless" attached="top" key="accessRequests">
+          <AccessRequestsTab record={record} />
         </Tab.Pane>
       ),
     },
