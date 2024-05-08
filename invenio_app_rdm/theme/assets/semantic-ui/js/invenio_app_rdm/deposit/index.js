@@ -22,6 +22,7 @@ ReactDOM.render(
       config={getInputFromDOM("deposits-config")}
       permissions={getInputFromDOM("deposits-record-permissions")}
       filesLocked={getInputFromDOM("deposits-record-locked-files")}
+      groupsEnabled={getInputFromDOM("deposits-groups-enabled")}
     />
   </OverridableContext.Provider>,
   document.getElementById("deposit-form")
