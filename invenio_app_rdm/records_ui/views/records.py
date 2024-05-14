@@ -22,6 +22,7 @@ from invenio_communities.communities.resources.serializer import (
 from invenio_communities.errors import CommunityDeletedError
 from invenio_communities.proxies import current_communities
 from invenio_communities.views.communities import render_community_theme_template
+from invenio_i18n.proxies import current_i18n
 from invenio_previewer.extensions import default as default_previewer
 from invenio_previewer.proxies import current_previewer
 from invenio_rdm_records.proxies import current_rdm_records
@@ -29,6 +30,11 @@ from invenio_rdm_records.records.systemfields.access.access_settings import (
     AccessSettings,
 )
 from invenio_rdm_records.resources.serializers import UIJSONSerializer
+from invenio_rdm_records.resources.serializers.csl import (
+    CSLJSONSerializer,
+    get_citation_string,
+    get_style_location,
+)
 from invenio_stats.proxies import current_stats
 from invenio_users_resources.proxies import current_user_resources
 from marshmallow import ValidationError
@@ -412,8 +418,36 @@ def record_tombstone_error(error):
 
 
 def record_permission_denied_error(error):
-    """Handle permission denier error on record views."""
+    """Handle permission denied error on record views."""
     if not current_user.is_authenticated:
         # trigger the flask-login unauthorized handler
         return current_app.login_manager.unauthorized()
+
+    record = getattr(error, "record", None)
+
+    if (
+        record
+        and record["access"]["record"] == "restricted"
+        and "doi" in record["pids"]
+    ):
+        default_citation_style = current_app.config.get(
+            "RDM_CITATION_STYLES_DEFAULT", "apa"
+        )
+
+        citation = get_citation_string(
+            CSLJSONSerializer().dump_obj(record),
+            record.pid.pid_value,
+            get_style_location(default_citation_style),
+            locale=current_i18n.language,
+        )
+
+        return (
+            render_template(
+                "invenio_app_rdm/records/restricted_tombstone.html",
+                record=record,
+                citation_text=citation,
+            ),
+            403,
+        )
+
     return render_template(current_app.config["THEME_403_TEMPLATE"]), 403

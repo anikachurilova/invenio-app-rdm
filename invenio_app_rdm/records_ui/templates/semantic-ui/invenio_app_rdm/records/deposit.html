@@ -44,6 +44,10 @@
   {%- if config %}
     <input type="hidden" name="deposits-groups-enabled"
            value='{{ config.USERS_RESOURCES_GROUPS_ENABLED | tojson }}'>
+    <input type="hidden" name="deposits-record-restriction-grace-period"
+           value='{{ config.RECORDS_RESTRICTION_GRACE_PERIOD.days | tojson }}'>
+    <input type="hidden" name="deposits-allow-record-restriction"
+           value='{{ config.ALLOW_RECORD_RESTRICTION_AFTER_GRACE_PERIOD | tojson }}'>
   {%- endif %}
 
   {%- if forms_config %}

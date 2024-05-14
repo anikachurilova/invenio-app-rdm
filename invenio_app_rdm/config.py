@@ -684,6 +684,12 @@ Previous invenio-search-ui, now is picked by the instance records/ext.py.
 APP_RDM_DEPOSIT_FORM_TEMPLATE = "invenio_app_rdm/records/deposit.html"
 """Deposit page's form template."""
 
+RECORDS_RESTRICTION_GRACE_PERIOD = timedelta(days=30)
+"""Grace period for changing record access to restricted."""
+
+ALLOW_RECORD_RESTRICTION_AFTER_GRACE_PERIOD = False
+"""Whether record access restriction is allowed after the grace period or not."""
+
 APP_RDM_USER_DASHBOARD_ROUTES = {
     "uploads": "/me/uploads",
     "communities": "/me/communities",
